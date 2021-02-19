@@ -5,7 +5,8 @@
 物品如果只出现过一次的就不要了（这一步之后处理）
 process history.txt and timestamp.txt
 output 
-train.txt 
+train.txt
+valid.txt
 test.txt
 '''
 from tqdm import tqdm
@@ -65,6 +66,7 @@ np.random.shuffle(smp_idx)
 print(smp_idx[:10])
 
 f_train = open('train.txt', 'w')
+f_valid = open('valid.txt', 'w')
 f_test = open('test.txt', 'w')
 
 str_train, str_test = '', ''
@@ -75,7 +77,14 @@ for i in tqdm(smp_idx[:n_sample//10]):
 f_test.write(str_test)
 f_test.close()
 
-for i in tqdm(smp_idx[n_sample//10:]): 
+n_valid = (n-n_sample//10)//10
+for i in tqdm(smp_idx[n_sample//10:n_sample//10+n_valid]): 
+    valid_smp = all_sample[i]
+    str_valid += str(valid_smp) + '\n'
+f_valid.write(str_valid)
+f_valid.close()
+
+for i in tqdm(smp_idx[n_sample//10+n_valid:]): 
     train_smp = all_sample[i]
     str_train += str(train_smp) + '\n'
 f_train.write(str_train)
